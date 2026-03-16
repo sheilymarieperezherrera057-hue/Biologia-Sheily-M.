@@ -206,7 +206,7 @@ export default function App() {
       if (nuevaCadena.length === organismoActivo.secuencia.length) {
         setTimeout(() => {
           triggerSound('transition');
-          setFase(2);
+          setFase(1.5);
         }, 1000);
       }
     } else {
@@ -470,6 +470,129 @@ export default function App() {
                       {base}
                     </button>
                   ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* FASE 1.5: REPLICATION BUBBLE */}
+            {fase === 1.5 && (
+              <motion.div
+                key="bubble"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                className="p-8 flex flex-col items-center justify-center h-full"
+              >
+                <div className="max-w-4xl w-full flex flex-col items-center text-center">
+                  <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    className="mb-8"
+                  >
+                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                      ¿La cadena original de ADN se abría en ciertos puntos para empezar a copiarse?
+                    </h2>
+                    <p className="text-xl text-lab-accent italic">
+                      ¿Cómo crees que se llaman esos puntos de apertura?
+                    </p>
+                  </motion.div>
+
+                  {/* Animation Container */}
+                  <div className="relative w-full h-64 my-12 flex items-center justify-center">
+                    <svg viewBox="0 0 800 200" className="w-full h-full overflow-visible">
+                      {/* Top Strand */}
+                      <motion.path
+                        d="M 50 100 Q 200 100, 400 100 T 750 100"
+                        animate={{ d: "M 50 100 Q 200 100, 400 20 T 750 100" }}
+                        transition={{ duration: 2, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+                        fill="transparent"
+                        stroke="#3b82f6"
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                      />
+                      {/* Bottom Strand */}
+                      <motion.path
+                        d="M 50 100 Q 200 100, 400 100 T 750 100"
+                        animate={{ d: "M 50 100 Q 200 100, 400 180 T 750 100" }}
+                        transition={{ duration: 2, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+                        fill="transparent"
+                        stroke="#10b981"
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                      />
+                      
+                      {/* Base Pairs (Connecting lines) */}
+                      {Array.from({ length: 15 }).map((_, i) => {
+                        const x = 100 + i * 40;
+                        // Calculate distance from center (400)
+                        const distFromCenter = Math.abs(x - 400);
+                        // Max stretch at center is 80 (from 100 to 20/180)
+                        const stretch = Math.max(0, 80 - (distFromCenter * 80 / 300));
+                        
+                        return (
+                          <motion.line
+                            key={i}
+                            x1={x}
+                            y1="100"
+                            x2={x}
+                            y2="100"
+                            animate={{ 
+                              y1: 100 - stretch, 
+                              y2: 100 + stretch,
+                              opacity: stretch > 40 ? 0.2 : 1 
+                            }}
+                            transition={{ duration: 2, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+                            stroke="rgba(255,255,255,0.3)"
+                            strokeWidth="4"
+                          />
+                        );
+                      })}
+
+                      {/* Labels */}
+                      <motion.g
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1 }}
+                      >
+                        <text x="400" y="100" fill="white" fontSize="16" textAnchor="middle" className="font-mono" opacity="0.8">
+                          BURBUJA DE REPLICACIÓN
+                        </text>
+                        <text x="250" y="100" fill="#10b981" fontSize="12" textAnchor="middle" className="font-mono">
+                          ← HORQUILLA
+                        </text>
+                        <text x="550" y="100" fill="#3b82f6" fontSize="12" textAnchor="middle" className="font-mono">
+                          HORQUILLA →
+                        </text>
+                      </motion.g>
+                    </svg>
+                  </div>
+
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 1.5, duration: 0.5 }}
+                    className="bg-white/5 border border-white/10 p-6 rounded-2xl max-w-3xl mb-8"
+                  >
+                    <p className="text-slate-300 leading-relaxed text-lg">
+                      ¡Exacto! El ADN no se abre todo a la vez. Se abre en puntos específicos llamados <strong className="text-white">Orígenes de Replicación</strong>. 
+                      Al separarse las dos cadenas, se forma una estructura ovalada conocida como <strong className="text-lab-accent">Burbuja de Replicación</strong>. 
+                      Los extremos en forma de "Y" donde el ADN se sigue abriendo se llaman <strong className="text-blue-400">Horquillas de Replicación</strong>.
+                    </p>
+                  </motion.div>
+
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2 }}
+                    onClick={() => {
+                      triggerSound('click');
+                      setFase(2);
+                    }}
+                    className="bg-lab-accent hover:bg-emerald-500 text-lab-bg font-bold py-4 px-12 rounded-xl flex items-center gap-3 transition-all shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:shadow-[0_0_50px_rgba(16,185,129,0.5)] text-lg"
+                  >
+                    CONTINUAR A MITOSIS <ArrowRight size={24} />
+                  </motion.button>
                 </div>
               </motion.div>
             )}
