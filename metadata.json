@@ -1,0 +1,5 @@
+{
+  "name": "BioSim: Dominican Biodiversity Lab",
+  "description": "An interactive organic simulator designed for adolescents to learn about DNA replication and mitosis through the lens of Dominican endemic species.",
+  "requestFramePermissions": []
+}
